@@ -1,0 +1,21 @@
+resource "aws_eks_cluster" "this" {
+  name     = var.cluster_name
+  role_arn = "arn:aws:iam::073186739637:role/EKSClusterRole"
+
+  vpc_config {
+    subnet_ids = ["subnet-0f94a563360fc3a04", "subnet-073dce4812db1e518"]
+  }
+}
+
+resource "aws_eks_node_group" "default" {
+  cluster_name  = aws_eks_cluster.this.name
+  node_role_arn = "arn:aws:iam::073186739637:role/EKSNodeGroupRole"
+  subnet_ids    = ["subnet-0f94a563360fc3a04", "subnet-073dce4812db1e518"]
+
+  scaling_config {
+    desired_size = 2
+    max_size     = 3
+    min_size     = 1
+  }
+}
+
